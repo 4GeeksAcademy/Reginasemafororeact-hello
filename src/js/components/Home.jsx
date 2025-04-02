@@ -1,28 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+const TrafficLight = () => {
+  const [color, setColor] = useState("red");
+  const [colors, setColors] = useState(["red", "yellow", "green"]);
 
-//create your first component
-const Home = () => {
-	return (
-		<div className="text-center">
-            
+  const handleClick = (selectedColor) => setColor(selectedColor);
 
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
+  const toggleColor = () => {
+    const currentIndex = colors.indexOf(color);
+    setColor(colors[(currentIndex + 1) % colors.length]);
+  };
+
+  const addPurple = () => {
+    if (!colors.includes("purple")) {
+      setColors([...colors, "purple"]);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <TrafficLightBox colors={colors} color={color} handleClick={handleClick} />
+      <div>
+        <button onClick={toggleColor} style={{ margin: "10px" }}>
+          Cambiar Color
+        </button>
+        <button onClick={addPurple}>Añadir Púrpura</button>
+      </div>
+    </div>
+  );
 };
 
-export default Home;
+const TrafficLightBox = ({ colors, color, handleClick }) => (
+  <div
+    style={{
+      backgroundColor: "black",
+      width: "80px",
+      padding: "10px",
+      borderRadius: "10px",
+      display: "inline-block",
+    }}
+  >
+    {colors.map((c) => (
+      <TrafficLightCircle key={c} color={c} isActive={color === c} handleClick={handleClick} />
+    ))}
+  </div>
+);
+
+const TrafficLightCircle = ({ color, isActive, handleClick }) => (
+  <div
+    onClick={() => handleClick(color)}
+    style={{
+      width: "60px",
+      height: "60px",
+      margin: "10px auto",
+      borderRadius: "50%",
+      backgroundColor: color,
+      opacity: isActive ? 1 : 0.3,
+      cursor: "pointer",
+    }}
+  ></div>
+);
+
+export default TrafficLight;
